@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "assumptions": [
+    "Raw release notes are provided by the user."
+  ],
+  "effects": [
+    "Writes reports/LAUNCH_ANNOUNCEMENT.md in the bound project."
+  ],
+  "cases": [
+    {
+      "id": "standard_run",
+      "description": "Standard run creating launch announcements.",
+      "inputs": {
+        "release_notes": "We are launching a new feature: dark mode. It reduces eye strain.",
+        "target_audience": "Existing users"
+      },
+      "expect": {
+        "contains": [
+          "Email Blast",
+          "LinkedIn Post",
+          "Twitter Thread"
+        ]
+      }
+    }
+  ]
+}

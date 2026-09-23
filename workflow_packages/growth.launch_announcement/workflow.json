@@ -1,0 +1,51 @@
+{
+  "package_format": "tin-workflow-package-v1",
+  "definition": {
+    "key": "growth.launch_announcement",
+    "title": "Draft product launch announcements",
+    "description": "Turn your raw release notes into a coordinated marketing campaign: an email blast, a LinkedIn post, and a Twitter thread.",
+    "version": "1.0.0",
+    "executor": "workflow.code",
+    "schedule_modes": ["on_demand"],
+    "human_review": {"eligible": true, "summary": "Review the launch announcements"},
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "project_id": {"type": "string", "format": "uuid"},
+        "release_notes": {
+          "type": "string",
+          "minLength": 50,
+          "maxLength": 16000,
+          "title": "Raw Release Notes or Feature Descriptions",
+          "x-tin-ui": { "control": "textarea", "order": 10 }
+        },
+        "target_audience": {
+          "type": "string",
+          "default": "Existing customers and industry professionals",
+          "maxLength": 200,
+          "title": "Target Audience"
+        }
+      },
+      "required": ["project_id", "release_notes"]
+    },
+    "code": {
+      "runtime": "python3.12.8-stdlib-v1",
+      "entrypoint": "main.py",
+      "files": ["main.py"],
+      "timeout_seconds": 60,
+      "model_routes": {
+        "draft_campaign": {
+          "provider": "openai", "model": "gpt-5.6-luna", "max_calls": 1,
+          "max_input_bytes": 32000, "max_output_tokens": 2048
+        }
+      },
+      "output": {
+        "kind": "project.artifact",
+        "path": "reports/LAUNCH_ANNOUNCEMENT.md",
+        "media_type": "text/markdown",
+        "max_bytes": 16000
+      }
+    }
+  }
+}
